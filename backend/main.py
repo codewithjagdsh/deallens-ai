@@ -16,7 +16,7 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -39,7 +39,6 @@ def home():
 
 @app.post("/analyze-company")
 def analyze_company(profile: CompanyProfile):
-
     prompt = f"""
 You are a Private Equity due diligence analyst.
 
@@ -61,22 +60,19 @@ Formatting rules:
 - Use headings, short paragraphs, and bullet points.
 - Make it easy for business users and non-technical investors to read.
 - Use simple but professional Private Equity language.
-- Keep paragraphs short.
 - Use bullet points wherever possible.
 
 Required sections:
 
 <h2>1. Executive Summary</h2>
-Use 3 to 5 bullet points explaining:
 <ul>
-<li>What the company does</li>
-<li>Why it is attractive</li>
-<li>Main investment opportunity</li>
-<li>Major concerns</li>
+<li>Explain what the company does.</li>
+<li>Explain why it is attractive.</li>
+<li>Explain the main investment opportunity.</li>
+<li>Explain major concerns.</li>
 </ul>
 
 <h2>2. Market Sizing & Competitive Positioning</h2>
-Use bullet points for:
 <ul>
 <li>Market size</li>
 <li>Growth drivers</li>
@@ -86,9 +82,8 @@ Use bullet points for:
 </ul>
 
 <h2>3. Technology Stack Assessment</h2>
-Explain:
 <ul>
-<li>How modern the technology stack is</li>
+<li>Technology maturity</li>
 <li>Scalability</li>
 <li>Maintainability</li>
 <li>Technical debt</li>
@@ -96,20 +91,15 @@ Explain:
 </ul>
 
 <h2>4. AI Readiness</h2>
-Explain:
 <ul>
-<li>Where AI can improve the product</li>
-<li>Where AI can improve operations</li>
+<li>AI product opportunities</li>
+<li>AI operational opportunities</li>
 <li>Data availability</li>
-<li>Automation opportunities</li>
+<li>Automation potential</li>
 <li>AI maturity level</li>
 </ul>
 
 <h2>5. Risk Matrix</h2>
-Generate a properly aligned HTML table.
-
-Use this exact table structure:
-
 <table>
 <tr>
 <th>Risk</th>
@@ -118,28 +108,47 @@ Use this exact table structure:
 <th>Mitigation</th>
 </tr>
 <tr>
-<td>Risk name</td>
-<td>High / Medium / Low</td>
-<td>Short explanation</td>
-<td>Mitigation plan</td>
+<td>Technical Debt</td>
+<td>Medium</td>
+<td>Assess scalability and maintainability risks.</td>
+<td>Run technical audit and refactor critical systems.</td>
+</tr>
+<tr>
+<td>Regulatory Exposure</td>
+<td>High</td>
+<td>Industry or geography may create compliance obligations.</td>
+<td>Conduct legal and compliance due diligence.</td>
+</tr>
+<tr>
+<td>Market Competition</td>
+<td>Medium</td>
+<td>Competitors may reduce pricing power.</td>
+<td>Differentiate using AI features and customer success.</td>
+</tr>
+<tr>
+<td>Talent Gap</td>
+<td>Medium</td>
+<td>Small teams may lack senior AI or infrastructure talent.</td>
+<td>Hire senior engineering and AI leadership.</td>
+</tr>
+<tr>
+<td>Customer Concentration</td>
+<td>Medium</td>
+<td>Revenue may depend on limited customer segments.</td>
+<td>Diversify customer base and expand sales channels.</td>
 </tr>
 </table>
 
-Create at least 5 risks.
-Risks should include technical debt, regulatory exposure, market competition, talent gap, and customer concentration.
-
 <h2>6. Investment Recommendation</h2>
-Clearly state one of:
+<p>Clearly state one of: Invest, Invest with Caution, or Do Not Invest.</p>
 <ul>
-<li>Invest</li>
-<li>Invest with Caution</li>
-<li>Do Not Invest</li>
+<li>Explain the recommendation.</li>
+<li>Explain the upside.</li>
+<li>Explain the downside.</li>
+<li>Explain what must be validated before investment.</li>
 </ul>
 
-Then explain the reasoning using bullet points.
-
 <h2>7. Investment Memo</h2>
-Create a short PE-style investment memo with these subheadings:
 
 <h3>Investment Thesis</h3>
 <ul>

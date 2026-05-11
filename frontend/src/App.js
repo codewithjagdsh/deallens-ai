@@ -1,21 +1,42 @@
 import React, { useState } from "react";
 import "./App.css";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 
 function App() {
-  const [companyName, setCompanyName] = useState("");
-  const [industry, setIndustry] = useState("");
-  const [arr, setArr] = useState("");
-  const [employees, setEmployees] = useState("");
-  const [techStack, setTechStack] = useState("");
-  const [customers, setCustomers] = useState("");
-  const [geography, setGeography] = useState("");
+  const [formData, setFormData] = useState({
+    company_name: "",
+    industry: "",
+    arr: "",
+    employees: "",
+    tech_stack: "",
+    customers: "",
+    geography: ""
+  });
 
-  const [report, setReport] = useState("");
+  const [analysis, setAnalysis] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleGenerate = async () => {
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const cleanHtml = (html) => {
+    return html
+      .replace(/<!DOCTYPE html>/gi, "")
+      .replace(/<html>/gi, "")
+      .replace(/<\/html>/gi, "")
+      .replace(/<head>[\s\S]*?<\/head>/gi, "")
+      .replace(/<body>/gi, "")
+      .replace(/<\/body>/gi, "");
+  };
+
+  const analyzeCompany = async () => {
     setLoading(true);
-    setReport("");
+    setAnalysis("");
 
     try {
       const response = await fetch(
@@ -23,111 +44,119 @@ function App() {
         {
           method: "POST",
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "application/json"
           },
-          body: JSON.stringify({
-            company_name: companyName,
-            industry: industry,
-            arr: arr,
-            employees: employees,
-            tech_stack: techStack,
-            customers: customers,
-            geography: geography,
-          }),
+          body: JSON.stringify(formData)
         }
       );
 
       const data = await response.json();
-
-      console.log(data);
-
-      setReport(
-        data.analysis ||
-          data.report ||
-          JSON.stringify(data, null, 2)
-      );
+      setAnalysis(cleanHtml(data.analysis || ""));
     } catch (error) {
       console.error(error);
-      setReport("Error generating report");
+      setAnalysis("<p>Something went wrong. Please try again.</p>");
     }
 
     setLoading(false);
   };
 
+  const downloadPDF = async () => {
+    const input = document.getElementById("report");
+
+    const canvas = await html2canvas(input, {
+      scale: 2,
+      useCORS: true
+    });
+
+    const imgData = canvas.toDataURL("image/png");
+    const pdf = new jsPDF("p", "mm", "a4");
+
+    const pdfWidth = 210;
+    const pageHeight = 297;
+    const imgHeight = (canvas.height * pdfWidth) / canvas.width;
+
+    let heightLeft = imgHeight;
+    let position = 0;
+
+    pdf.addImage(imgData, "PNG", 0, position, pdfWidth, imgHeight);
+    heightLeft -= pageHeight;
+
+    while (heightLeft > 0) {
+      position = heightLeft - imgHeight;
+      pdf.addPage();
+      pdf.addImage(imgData, "PNG", 0, position, pdfWidth, imgHeight);
+      heightLeft -= pageHeight;
+    }
+
+    pdf.save(`${formData.company_name || "DealLens_AI"}_Report.pdf`);
+  };
+
   return (
     <div className="app">
-      <div className="container">
+      <div className="hero">
+        <p className="badge">AI-Powered Private Equity Intelligence</p>
         <h1>DealLens AI</h1>
+        <p className="subtitle">
+          Generate executive-ready due diligence, market intelligence,
+          AI readiness analysis, risk matrices, and PE investment memos in seconds.
+        </p>
+      </div>
 
-        <div className="content">
-          <div className="left-panel">
-            <h2>Target Company Profile</h2>
+      <div className="container">
+        <div className="card form-card">
+          <h2>Target Company Profile</h2>
+          <p className="muted">
+            Enter company information to generate a PE-style AI due diligence package.
+          </p>
 
-            <input
-              type="text"
-              placeholder="Company Name"
-              value={companyName}
-              onChange={(e) => setCompanyName(e.target.value)}
-            />
+          <div className="grid">
+            <input name="company_name" placeholder="Company Name" value={formData.company_name} onChange={handleChange} />
+            <input name="industry" placeholder="Industry" value={formData.industry} onChange={handleChange} />
+            <input name="arr" placeholder="ARR / Revenue" value={formData.arr} onChange={handleChange} />
+            <input name="employees" placeholder="Employees" value={formData.employees} onChange={handleChange} />
+            <input name="tech_stack" placeholder="Technology Stack" value={formData.tech_stack} onChange={handleChange} />
+            <input name="customers" placeholder="Customer Segment" value={formData.customers} onChange={handleChange} />
+            <input name="geography" placeholder="Geography" value={formData.geography} onChange={handleChange} />
+          </div>
 
-            <input
-              type="text"
-              placeholder="Industry"
-              value={industry}
-              onChange={(e) => setIndustry(e.target.value)}
-            />
+          <button onClick={analyzeCompany} disabled={loading}>
+            {loading ? "Generating Analysis..." : "Generate Due Diligence Report"}
+          </button>
 
-            <input
-              type="text"
-              placeholder="ARR / Revenue"
-              value={arr}
-              onChange={(e) => setArr(e.target.value)}
-            />
-
-            <input
-              type="text"
-              placeholder="Employees"
-              value={employees}
-              onChange={(e) => setEmployees(e.target.value)}
-            />
-
-            <input
-              type="text"
-              placeholder="Tech Stack"
-              value={techStack}
-              onChange={(e) => setTechStack(e.target.value)}
-            />
-
-            <input
-              type="text"
-              placeholder="Customers"
-              value={customers}
-              onChange={(e) => setCustomers(e.target.value)}
-            />
-
-            <input
-              type="text"
-              placeholder="Geography"
-              value={geography}
-              onChange={(e) => setGeography(e.target.value)}
-            />
-
-            <button onClick={handleGenerate}>
-              {loading ? "Generating..." : "Generate Due Diligence Report"}
+          {analysis && !loading && (
+            <button className="pdf-btn" onClick={downloadPDF}>
+              Download PDF Report
             </button>
-          </div>
+          )}
+        </div>
 
-          <div className="right-panel">
-            <h2>AI Due Diligence Report</h2>
-
-            <div className="report-box">
-              {loading ? (
-                <p>Generating report...</p>
-              ) : (
-                <pre>{report}</pre>
-              )}
+        <div className="card report-card">
+          <div className="report-header">
+            <div>
+              <h2>AI Due Diligence Report</h2>
+              <p className="report-subtitle">Executive-ready PE investment analysis</p>
             </div>
+            <div className="status">AI Generated</div>
           </div>
+
+          {!analysis && !loading && (
+            <div className="empty">
+              Your investment analysis will appear here after generation.
+            </div>
+          )}
+
+          {loading && (
+            <div className="loading">
+              <div className="spinner"></div>
+              <p>Running AI analysis...</p>
+            </div>
+          )}
+
+          {analysis && !loading && (
+            <div id="report" className="analysis-content">
+              <div dangerouslySetInnerHTML={{ __html: analysis }} />
+            </div>
+          )}
         </div>
       </div>
     </div>

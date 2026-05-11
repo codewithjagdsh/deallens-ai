@@ -29,7 +29,7 @@ function App() {
     setAnalysis("");
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/analyze-company", {
+      const response = await fetch("https://deallens-ai-backend-1.onrender.com/analyze-company", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

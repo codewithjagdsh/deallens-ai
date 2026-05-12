@@ -9,23 +9,20 @@
 body {
   font-family: 'Inter', sans-serif;
   background: linear-gradient(135deg, #0b1020, #111b3a);
-  min-height: 100vh;
   color: white;
 }
 
 .app {
-  min-height: 100vh;
   padding: 40px;
+  min-height: 100vh;
 }
 
 .header {
-  text-align: center;
   margin-bottom: 40px;
 }
 
 .header h1 {
-  font-size: 52px;
-  font-weight: 700;
+  font-size: 54px;
   background: linear-gradient(to right, #60a5fa, #a855f7);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -34,125 +31,67 @@ body {
 .header p {
   margin-top: 10px;
   color: #cbd5e1;
-  font-size: 18px;
 }
 
 .main-container {
   display: flex;
   gap: 30px;
-  align-items: flex-start;
 }
 
 .form-section,
 .report-section {
   flex: 1;
   background: rgba(17, 24, 39, 0.95);
-  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 24px;
-  padding: 32px;
-  backdrop-filter: blur(12px);
-}
-
-.form-section h2,
-.report-section h2 {
-  font-size: 32px;
-  margin-bottom: 10px;
-}
-
-.section-subtitle {
-  color: #94a3b8;
-  margin-bottom: 30px;
-  line-height: 1.6;
+  padding: 30px;
 }
 
 .form-group {
-  margin-bottom: 22px;
+  margin-bottom: 18px;
 }
 
 .form-group label {
   display: block;
-  margin-bottom: 10px;
-  font-size: 15px;
+  margin-bottom: 8px;
   color: #dbeafe;
-  font-weight: 500;
 }
 
-.form-group input,
-.form-group textarea {
+.form-group input {
   width: 100%;
-  padding: 16px;
-  border-radius: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: #020817;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid #334155;
+  background: #020617;
   color: white;
-  font-size: 15px;
-  outline: none;
-  transition: 0.3s ease;
-}
-
-.form-group input:focus,
-.form-group textarea:focus {
-  border-color: #8b5cf6;
-  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
-}
-
-.form-group textarea {
-  min-height: 100px;
-  resize: vertical;
-}
-
-.generate-btn,
-.download-btn {
-  width: 100%;
-  border: none;
-  padding: 16px;
-  border-radius: 14px;
-  font-size: 17px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.3s ease;
 }
 
 .generate-btn {
+  width: 100%;
+  padding: 16px;
+  border: none;
+  border-radius: 14px;
   background: linear-gradient(to right, #2563eb, #9333ea);
   color: white;
-  margin-top: 10px;
-}
-
-.generate-btn:hover {
-  transform: translateY(-2px);
-  opacity: 0.95;
-}
-
-.download-btn {
-  margin-top: 18px;
-  background: linear-gradient(to right, #059669, #10b981);
-  color: white;
-}
-
-.download-btn:hover {
-  transform: translateY(-2px);
-  opacity: 0.95;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
 }
 
 .report-box {
   background: #f8fafc;
   color: #111827;
+  padding: 24px;
   border-radius: 18px;
-  padding: 28px;
-  min-height: 650px;
-  max-height: 750px;
+  margin-top: 20px;
+  min-height: 600px;
   overflow-y: auto;
-  line-height: 1.8;
-  font-size: 15px;
-  margin-top: 25px;
+  line-height: 1.7;
 }
 
 .report-box h1,
 .report-box h2,
 .report-box h3 {
-  color: #111827;
-  margin-top: 20px;
+  margin-top: 18px;
   margin-bottom: 10px;
 }
 
@@ -160,84 +99,15 @@ body {
   margin-left: 20px;
 }
 
-.report-box li {
-  margin-bottom: 10px;
-}
-
-.report-box table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-}
-
-.report-box th,
-.report-box td {
-  border: 1px solid #d1d5db;
-  padding: 12px;
-  text-align: left;
-}
-
-.report-box th {
-  background: #e5e7eb;
-}
-
 .loading {
-  text-align: center;
-  color: #cbd5e1;
-  font-size: 18px;
   margin-top: 20px;
-}
-
-.error-box {
-  background: #fee2e2;
-  color: #991b1b;
-  padding: 18px;
-  border-radius: 14px;
-  margin-top: 20px;
-  font-weight: 500;
 }
 
 .ai-badge {
   display: inline-block;
   padding: 8px 16px;
+  border-radius: 999px;
   background: rgba(16, 185, 129, 0.15);
   color: #34d399;
-  border-radius: 999px;
-  font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 20px;
-}
-
-@media (max-width: 1100px) {
-  .main-container {
-    flex-direction: column;
-  }
-
-  .header h1 {
-    font-size: 40px;
-  }
-
-  .form-section,
-  .report-section {
-    width: 100%;
-  }
-}
-
-@media (max-width: 700px) {
-  .app {
-    padding: 20px;
-  }
-
-  .header h1 {
-    font-size: 32px;
-  }
-
-  .form-section,
-  .report-section {
-    padding: 24px;
-  }
-
-  .report-box {
-    min-height: 500px;
-  }
+  margin-bottom: 15px;
 }
